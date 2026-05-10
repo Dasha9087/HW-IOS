@@ -90,3 +90,4 @@ let result = searchContacts(from: contacts, by: "Александр")
 for contact in result {
     print("\(contact.firstName) \(contact.lastName) - \(contact.phoneNumber)")
 }
+let circlee = Circle(color: "Green", radius: 7.0)
