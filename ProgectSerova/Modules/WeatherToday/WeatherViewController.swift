@@ -6,6 +6,7 @@ final class WeatherViewController: UIViewController {
     private let presenter: WeatherPresenter
     private var hourlyData: [ForecastItem] = []
     private var dailyData: [ForecastItem] = []
+    private let unitsFormatter = UnitsFormatter(storageService: StorageService.shared)
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -335,7 +336,7 @@ private extension WeatherViewController {
     }
 }
 
-extension WeatherViewController: WeatherViewProtocol {
+extension WeatherViewController: WeatherViewInput {
     
     func renderWeather(_ viewModel: WeatherViewModel) {
         cityLabel.text = viewModel.city
@@ -405,7 +406,7 @@ extension WeatherViewController: UITableViewDataSource, UITableViewDelegate {
         ) as? DailyForecastCell else {
             return UITableViewCell()
         }
-        cell.configure(with: dailyData[indexPath.row])
+        cell.configure(with: dailyData[indexPath.row], unitsFormatter: unitsFormatter)
         return cell
     }
     

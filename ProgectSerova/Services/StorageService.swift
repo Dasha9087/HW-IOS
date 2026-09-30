@@ -1,6 +1,6 @@
 import Foundation
 
-final class StorageService: StorageServiceable {
+final class StorageService: StorageServiceInput {
     
     static let shared = StorageService()
     private init() {}

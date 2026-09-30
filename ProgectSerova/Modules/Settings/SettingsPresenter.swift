@@ -2,10 +2,10 @@ import Foundation
 
 final class SettingsPresenter {
     
-    weak var view: SettingsViewProtocol?
-    private let storage: StorageServiceable
+    weak var view: SettingsViewInput?
+    private let storage: StorageServiceInput
     
-    init(storage: StorageServiceable) {
+    init(storage: StorageServiceInput) {
         self.storage = storage
     }
     
@@ -20,7 +20,6 @@ final class SettingsPresenter {
     func changeUnits(_ isMetric: Bool) {
         let units = isMetric ? "metric" : "imperial"
         storage.saveUnits(units)
-        view?.updateUnits(units)
     }
     
     func changeTheme(_ isDark: Bool) {

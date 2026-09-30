@@ -46,12 +46,14 @@ final class HourlyCell: UICollectionViewCell {
     }
     
     func configure(with item: ForecastItem) {
-        let date = Date(timeIntervalSince1970: item.dt)
+        let date = Date(timeIntervalSince1970: item.date)
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         timeLabel.text = formatter.string(from: date)
         
-        tempLabel.text = UnitsFormatter.temperature(item.main.temp)
+        let unitsFormatter = UnitsFormatter(storageService: StorageService.shared)
+        
+        tempLabel.text = unitsFormatter.temperature(item.main.temp)
         
         let iconCode = item.weather.first?.icon ?? "01d"
         iconView.image = UIImage(systemName: WeatherIcon.systemName(for: iconCode))

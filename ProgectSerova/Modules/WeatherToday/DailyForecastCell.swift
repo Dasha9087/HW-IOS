@@ -50,9 +50,9 @@ final class DailyForecastCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with item: ForecastItem) {
-        dayLabel.text = dayTitle(for: item.dt)
-        tempLabel.text = UnitsFormatter.temperature(item.main.temp)
+    func configure(with item: ForecastItem, unitsFormatter: UnitsFormatter) {
+        dayLabel.text = dayTitle(for: item.date)
+        tempLabel.text = unitsFormatter.temperature(item.main.temp)
         
         let iconCode = item.weather.first?.icon ?? "01d"
         iconView.image = UIImage(systemName: WeatherIcon.systemName(for: iconCode))

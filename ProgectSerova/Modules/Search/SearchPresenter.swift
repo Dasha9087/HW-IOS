@@ -3,12 +3,12 @@ import MapKit
 
 final class SearchPresenter: NSObject {
     
-    weak var view: SearchViewProtocol?
-    private let storage: StorageServiceable
+    weak var view: SearchViewInput?
+    private let storage: StorageServiceInput
     
     private let completer = MKLocalSearchCompleter()
     
-    init(storage: StorageServiceable) {
+    init(storage: StorageServiceInput) {
         self.storage = storage
         super.init()
         

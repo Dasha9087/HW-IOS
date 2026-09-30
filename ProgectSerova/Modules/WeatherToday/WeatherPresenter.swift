@@ -2,11 +2,11 @@ import Foundation
 
 final class WeatherPresenter {
     
-    weak var view: WeatherViewProtocol?
-    private let service: WeatherServiceable
-    private let storage: StorageServiceable
+    weak var view: WeatherViewInput?
+    private let service: WeatherServiceInput
+    private let storage: StorageServiceInput
     
-    init(service: WeatherServiceable, storage: StorageServiceable) {
+    init(service: WeatherServiceInput, storage: StorageServiceInput) {
         self.service = service
         self.storage = storage
     }
@@ -58,7 +58,7 @@ final class WeatherPresenter {
         var grouped: [Date: [ForecastItem]] = [:]
         
         for item in list {
-            let date = Date(timeIntervalSince1970: item.dt)
+            let date = Date(timeIntervalSince1970: item.date)
             let dayStart = calendar.startOfDay(for: date)
             grouped[dayStart, default: []].append(item)
         }

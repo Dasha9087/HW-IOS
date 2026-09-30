@@ -410,7 +410,7 @@ private extension DayDetailsViewController {
     }
 }
 
-extension DayDetailsViewController: DayDetailsViewProtocol {
+extension DayDetailsViewController: DayDetailsViewInput{
     
     func renderDetails(_ viewModel: DayDetailsViewModel) {
         lastViewModel = viewModel

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol WeatherServiceable {
+protocol WeatherServiceInput {
     
     func fetchCurrentWeather(
         city: String,

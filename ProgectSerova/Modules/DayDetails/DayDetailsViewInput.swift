@@ -1,5 +1,5 @@
 import Foundation
 
-protocol DayDetailsViewProtocol: AnyObject {
+protocol DayDetailsViewInput: AnyObject {
     func renderDetails(_ viewModel: DayDetailsViewModel)
 }

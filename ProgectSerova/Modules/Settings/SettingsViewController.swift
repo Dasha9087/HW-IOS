@@ -6,7 +6,15 @@ final class SettingsViewController: UIViewController {
     var onUnitsChanged: (() -> Void)?
     var onWindUnitsChanged: (() -> Void)?
     
-    var presenter: SettingsPresenter?
+    private let presenter: SettingsPresenter
+    init(presenter: SettingsPresenter) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private let scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -125,7 +133,6 @@ final class SettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupPresenter()
         loadInitialSettings()
     }
     
@@ -247,16 +254,7 @@ private extension SettingsViewController {
         gradientLayer = gradient
     }
     
-    func setupPresenter() {
-        if presenter == nil {
-            presenter = SettingsPresenter(storage: StorageService.shared)
-        }
-        presenter?.view = self
-    }
-    
     func loadInitialSettings() {
-        guard let presenter = presenter else { return }
-        
         let isMetric = presenter.getCurrentUnits() == "metric"
         unitsSegmentedControl.selectedSegmentIndex = isMetric ? 0 : 1
         
@@ -267,17 +265,17 @@ private extension SettingsViewController {
     }
     
     @objc func unitsChanged(_ sender: UISegmentedControl) {
-        presenter?.changeUnits(sender.selectedSegmentIndex == 0)
+        presenter.changeUnits(sender.selectedSegmentIndex == 0)
         onUnitsChanged?()
     }
     
     @objc func windChanged(_ sender: UISegmentedControl) {
-        presenter?.changeWindUnits(sender.selectedSegmentIndex == 1)
+        presenter.changeWindUnits(sender.selectedSegmentIndex == 1)
         onWindUnitsChanged?()
     }
     
     @objc func themeChanged(_ sender: UISwitch) {
-        presenter?.changeTheme(sender.isOn)
+        presenter.changeTheme(sender.isOn)
         applyTheme(isDark: sender.isOn)
     }
     
@@ -294,9 +292,7 @@ private extension SettingsViewController {
     }
 }
 
-extension SettingsViewController: SettingsViewProtocol {
-    
-    func updateUnits(_ units: String) {}
+extension SettingsViewController: SettingsViewInput {
     
     func updateTheme(_ isDark: Bool) {
         DispatchQueue.main.async { [weak self] in

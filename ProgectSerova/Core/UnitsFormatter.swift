@@ -1,16 +1,22 @@
 import Foundation
 
-enum UnitsFormatter {
+final class UnitsFormatter {
     
-    static func temperature(_ value: Double) -> String {
-        let units = StorageService.shared.getUnits()
+    private let storageService: StorageService
+    
+    init(storageService: StorageService) {
+        self.storageService = storageService
+    }
+    
+    func temperature(_ value: Double) -> String {
+        let units = storageService.getUnits()
         let intValue = Int(value.rounded())
         return units == "imperial" ? "\(intValue)°F" : "\(intValue)°"
     }
     
-    static func windSpeed(_ value: Double) -> String {
-        let apiUnits = StorageService.shared.getUnits()
-        let windPref = StorageService.shared.getWindUnits()
+    func windSpeed(_ value: Double) -> String {
+        let apiUnits = storageService.getUnits()
+        let windPref = storageService.getWindUnits()
         
         let metersPerSecond: Double
         if apiUnits == "imperial" {

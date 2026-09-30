@@ -1,6 +1,6 @@
 import Foundation
 
-protocol StorageServiceable {
+protocol StorageServiceInput {
     func getSearchHistory() -> [String]
     func addToHistory(_ city: String)
     func clearHistory()

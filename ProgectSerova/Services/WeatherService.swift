@@ -1,6 +1,6 @@
 import Foundation
 
-final class WeatherService: WeatherServiceable {
+final class WeatherService: WeatherServiceInput {
     
     private var units: String {
         StorageService.shared.getUnits()

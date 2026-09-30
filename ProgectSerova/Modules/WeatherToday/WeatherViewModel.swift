@@ -1,7 +1,7 @@
 import Foundation
 
 struct WeatherViewModel {
-    let city: String
+    var city: String
     let date: String
     let temperature: String
     let feelsLike: String
@@ -15,6 +15,9 @@ struct WeatherViewModel {
     init(from model: WeatherResponse) {
         city = model.name
         
+        // 1. Создаем экземпляр UnitsFormatter
+        let unitsFormatter = UnitsFormatter(storageService: StorageService.shared)
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, d MMMM"
         formatter.locale = Locale(identifier: "ru_RU")
@@ -26,18 +29,18 @@ struct WeatherViewModel {
         let descText = model.weather.first?.description.capitalized ?? ""
         let conditionCode = model.weather.first?.icon ?? "01d"
         
-        temperature = UnitsFormatter.temperature(model.main.temp)
-        feelsLike = "Ощущается как \(UnitsFormatter.temperature(model.main.feels_like))"
+        // 2. Используем unitsFormatter вместо UnitsFormatter
+        temperature = unitsFormatter.temperature(model.main.temp)
+        feelsLike = "Ощущается как \(unitsFormatter.temperature(model.main.feels_like))"
         description = descText
-        humidity = "\(humValue)"
-        windSpeed = UnitsFormatter.windSpeed(model.wind.speed)
-        pressure = "\(pressVal) мм рт.ст."
+        humidity = "\(humValue)%"
+        windSpeed = unitsFormatter.windSpeed(model.wind.speed)
+        pressure = "\(pressVal) мм рт. ст."
         uvIndex = "Низкий"
         
         icon = WeatherIcon.systemName(for: conditionCode)
     }
 }
-
 enum WeatherIcon {
     static func systemName(for code: String) -> String {
         switch code {
@@ -53,3 +56,4 @@ enum WeatherIcon {
         }
     }
 }
+

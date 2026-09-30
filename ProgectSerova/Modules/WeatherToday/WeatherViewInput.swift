@@ -1,6 +1,6 @@
 import Foundation
 
-protocol WeatherViewProtocol: AnyObject {
+protocol WeatherViewInput: AnyObject {
     func renderWeather(_ viewModel: WeatherViewModel)
     func renderHourlyForecast(_ items: [ForecastItem])
     func renderDailyForecast(_ items: [ForecastItem])

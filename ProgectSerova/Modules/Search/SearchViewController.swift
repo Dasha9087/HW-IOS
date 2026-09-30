@@ -148,7 +148,7 @@ private extension SearchViewController {
     }
 }
 
-extension SearchViewController: SearchViewProtocol {
+extension SearchViewController: SearchViewInput {
     
     func display(items: [String], isHistory: Bool) {
         self.displayItems = items

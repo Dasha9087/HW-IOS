@@ -1,5 +1,71 @@
 import UIKit
 
+final class ModuleBuilder {
+    
+    static func createWeatherModule() -> (UINavigationController, WeatherPresenter) {
+        let storage = StorageService.shared
+        let weatherService = WeatherService()
+        let weatherPresenter = WeatherPresenter(service: weatherService, storage: storage)
+        let weatherVC = WeatherViewController(presenter: weatherPresenter)
+        
+        let navigation = UINavigationController(rootViewController: weatherVC)
+        navigation.tabBarItem = UITabBarItem(
+            title: "Сегодня",
+            image: UIImage(systemName: "cloud.sun.fill"),
+            tag: 0
+        )
+        return (navigation, weatherPresenter)
+    }
+    
+    static func createMapModule() -> UINavigationController {
+        let weatherService = WeatherService()
+        let locationService = LocationService()
+        
+        let presenter = WeatherMapPresenter(
+            weatherService: weatherService,
+            locationService: locationService
+        )
+        
+        let mapVC = WeatherMapViewController(presenter: presenter)
+        
+        presenter.view = mapVC
+        
+        let navigation = UINavigationController(rootViewController: mapVC)
+        navigation.tabBarItem = UITabBarItem(
+            title: "Карта",
+            image: UIImage(systemName: "map.fill"),
+            tag: 1
+        )
+        return navigation
+    }
+    
+    static func createSettingsModule(weatherPresenter: WeatherPresenter?) -> UINavigationController {
+        let storage = StorageService.shared
+        let settingsPresenter = SettingsPresenter(storage: storage)
+        let settingsVC = SettingsViewController(presenter: settingsPresenter)
+        
+        settingsPresenter.view = settingsVC
+        
+        settingsVC.onUnitsChanged = { [weak weatherPresenter] in
+            let city = StorageService.shared.getLastCity()
+            weatherPresenter?.loadWeather(for: city)
+        }
+        
+        settingsVC.onWindUnitsChanged = { [weak weatherPresenter] in
+            let city = StorageService.shared.getLastCity()
+            weatherPresenter?.loadWeather(for: city)
+        }
+        
+        let navigation = UINavigationController(rootViewController: settingsVC)
+        navigation.tabBarItem = UITabBarItem(
+            title: "Настройки",
+            image: UIImage(systemName: "gearshape.fill"),
+            tag: 2
+        )
+        return navigation
+    }
+}
+
 final class MainTabBarController: UITabBarController {
     
     override func viewDidLoad() {
@@ -35,49 +101,11 @@ final class MainTabBarController: UITabBarController {
     }
     
     private func setupTabs() {
-        let storage = StorageService.shared
-        let weatherService = WeatherService()
-        let weatherPresenter = WeatherPresenter(service: weatherService, storage: storage)
-        let settingsPresenter = SettingsPresenter(storage: storage)
-        let weatherVC = WeatherViewController(presenter: weatherPresenter)
-        let weather = UINavigationController(rootViewController: weatherVC)
-        let mapVC = WeatherMapViewController()
-        let map = UINavigationController(rootViewController: mapVC)
-        let settingsVC = SettingsViewController()
-        settingsVC.presenter = settingsPresenter
-        settingsPresenter.view = settingsVC
-        settingsVC.onUnitsChanged = { [weak weatherPresenter] in
-            let city = StorageService.shared.getLastCity()
-            weatherPresenter?.loadWeather(for: city)
-        }
+        let (weatherNav, weatherPresenter) = ModuleBuilder.createWeatherModule()
+        let mapNav = ModuleBuilder.createMapModule()
+        let settingsNav = ModuleBuilder.createSettingsModule(weatherPresenter: weatherPresenter)
         
-        settingsVC.onWindUnitsChanged = { [weak weatherPresenter] in
-            let city = StorageService.shared.getLastCity()
-            weatherPresenter?.loadWeather(for: city)
-        }
-        
-        let settings = UINavigationController(rootViewController: settingsVC)
-        
-        weather.tabBarItem = UITabBarItem(
-            title: "Сегодня",
-            image: UIImage(systemName: "cloud.sun.fill"),
-            tag: 0
-        )
-        
-        map.tabBarItem = UITabBarItem(
-            title: "Карта",
-            image: UIImage(systemName: "map.fill"),
-            tag: 1
-        )
-        
-        settings.tabBarItem = UITabBarItem(
-            title: "Настройки",
-            image: UIImage(systemName: "gearshape.fill"),
-            tag: 2
-        )
-        
-        viewControllers = [weather, map, settings]
-        
+        viewControllers = [weatherNav, mapNav, settingsNav]
         
         if let items = tabBar.items {
             for item in items {

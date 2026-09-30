@@ -2,7 +2,7 @@ import Foundation
 
 final class DayDetailsPresenter {
     
-    weak var view: DayDetailsViewProtocol?
+    weak var view: DayDetailsViewInput?
     private let city: String
     
     init(city: String) {

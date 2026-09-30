@@ -1,6 +1,8 @@
 import Foundation
 
-protocol SearchViewProtocol: AnyObject {
+protocol SearchViewInput: AnyObject {
     func display(items: [String], isHistory: Bool)
     func closeSearch()
 }
+
+
